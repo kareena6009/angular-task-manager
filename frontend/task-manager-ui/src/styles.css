@@ -1,0 +1,26 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,
+body{
+  height:100%;
+}
+
+body{
+  font-family: 'Times New Roman', serif;
+  background:#f8fafc;
+}
+
+button{
+  cursor:pointer;
+}
+
+input,
+select,
+textarea,
+button{
+  font:inherit;
+}

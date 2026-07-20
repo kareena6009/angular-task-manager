@@ -1,0 +1,181 @@
+<div class="workspace">
+
+  <div class="workspace-header">
+    <h1>📋 Task Workspace</h1>
+    <p>Manage and monitor active project tasks</p>
+  </div>
+
+  <div class="add-task-card">
+
+    <h2>➕ Add New Task</h2>
+
+    <input
+      type="text"
+      placeholder="Task Title"
+      [(ngModel)]="newTask.title">
+
+    <input
+      type="text"
+      placeholder="Description"
+      [(ngModel)]="newTask.description">
+
+    <select [(ngModel)]="newTask.priority">
+      <option value="High">High</option>
+      <option value="Medium">Medium</option>
+      <option value="Low">Low</option>
+    </select>
+
+    <input
+      type="text"
+      placeholder="Department"
+      [(ngModel)]="newTask.department">
+
+    <input
+      type="text"
+      placeholder="Owner"
+      [(ngModel)]="newTask.owner">
+
+    <select [(ngModel)]="newTask.status">
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+      <option value="Pending">Pending</option>
+    </select>
+
+    <input
+      type="text"
+      placeholder="Goal"
+      [(ngModel)]="newTask.goal">
+
+    <input
+      type="date"
+      [(ngModel)]="newTask.dueDate">
+
+    <button
+      class="add-btn"
+      (click)="addTask()">
+      Add Task
+    </button>
+
+  </div>
+
+  <div class="insights">
+
+    <div class="insight-card red">
+      <h3>🔥 High Priority</h3>
+      <p>{{ highPriorityCount }} Active Tasks</p>
+    </div>
+
+    <div class="insight-card orange">
+      <h3>📋 Total Tasks</h3>
+      <p>{{ tasks.length }} Tasks</p>
+    </div>
+
+    <div class="insight-card blue">
+      <h3>🚀 Sprint Progress</h3>
+      <p>{{ sprintProgress }}% Complete</p>
+    </div>
+
+  </div>
+
+  <h2 class="section-title">📋 Active Work Items</h2>
+
+  <div class="task-grid">
+
+    @for(task of tasks; track task.id){
+
+    <div class="work-card">
+
+      <div class="card-top">
+
+        <h3>{{ task.title }}</h3>
+
+        <span class="priority">
+          {{ task.priority }}
+        </span>
+
+      </div>
+
+      <p>{{ task.description }}</p>
+
+      <div class="task-meta">
+
+        <p>
+          <strong>Owner:</strong>
+          {{ task.owner }}
+        </p>
+
+        <p>
+          <strong>Status:</strong>
+          {{ task.status }}
+        </p>
+
+        <p>
+          <strong>Goal:</strong>
+          {{ task.goal }}
+        </p>
+
+      </div>
+
+      <div class="info-row">
+
+        <span>
+          🏢 {{ task.department }}
+        </span>
+
+        <span>
+          📅 {{ task.dueDate }}
+        </span>
+
+      </div>
+
+      <div class="progress-section">
+
+        <div class="progress-header">
+
+          <span>Progress</span>
+
+          @if(task.status === 'Completed'){
+            <span>100%</span>
+          }
+
+          @if(task.status === 'In Progress'){
+            <span>60%</span>
+          }
+
+          @if(task.status === 'Pending'){
+            <span>20%</span>
+          }
+
+        </div>
+
+        <div class="progress-bar">
+
+          @if(task.status === 'Completed'){
+            <div class="progress-fill progress-100"></div>
+          }
+
+          @if(task.status === 'In Progress'){
+            <div class="progress-fill progress-60"></div>
+          }
+
+          @if(task.status === 'Pending'){
+            <div class="progress-fill progress-20"></div>
+          }
+
+        </div>
+
+      </div>
+
+      <button
+        class="delete-btn"
+        (click)="deleteTask(task.id)">
+        🗑 Delete Task
+      </button>
+
+    </div>
+
+    }
+
+  </div>
+
+</div>

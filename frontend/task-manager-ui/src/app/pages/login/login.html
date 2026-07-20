@@ -1,0 +1,49 @@
+<div class="login-container">
+
+  <div class="login-left">
+
+    <h1>Task Management System</h1>
+
+    <p class="tagline">
+      Organize tasks, monitor progress and manage project activities from one place.
+    </p>
+
+    <div class="feature-card">
+      ✅ Task Tracking
+    </div>
+
+    <div class="feature-card">
+      ✅ Team Collaboration
+    </div>
+
+    <div class="feature-card">
+      ✅ Analytics & Insights
+    </div>
+
+  </div>
+
+  <div class="login-card">
+
+    <h2>Welcome Back 👋</h2>
+
+    <p class="subtitle">
+      Sign in to access your workspace
+    </p>
+
+    <input
+      type="text"
+      placeholder="Username"
+      [(ngModel)]="username">
+
+    <input
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password">
+
+    <button (click)="login()">
+      Sign In
+    </button>
+
+  </div>
+
+</div>

@@ -1,0 +1,53 @@
+<div class="project-center">
+
+  <div class="header">
+    <h1>🎯 Project Center</h1>
+    <p>
+      Track project milestones and progress.
+    </p>
+  </div>
+
+  <div class="add-card">
+
+    <h2>Add Milestone</h2>
+
+    <input
+      type="text"
+      placeholder="Milestone Name"
+      [(ngModel)]="newMilestone.title">
+
+    <button (click)="addMilestone()">
+      Add Milestone
+    </button>
+
+  </div>
+
+  <div class="summary-card">
+
+    <h3>Total Milestones</h3>
+
+    <p>{{ milestones.length }}</p>
+
+  </div>
+
+  <div class="milestone-grid">
+
+    @for(milestone of milestones; track milestone.id){
+
+    <div class="milestone-card">
+
+      <h3>{{ milestone.title }}</h3>
+
+      <button
+        class="delete-btn"
+        (click)="deleteMilestone(milestone.id)">
+        Delete
+      </button>
+
+    </div>
+
+    }
+
+  </div>
+
+</div>

@@ -1,0 +1,75 @@
+<div class="workspace">
+
+  <div class="header">
+    <h1>👥 Team Workspace</h1>
+    <p>Manage project members and responsibilities.</p>
+  </div>
+
+  <div class="add-card">
+
+    <h2>Add Team Member</h2>
+
+    <input
+      type="text"
+      placeholder="Member Name"
+      [(ngModel)]="newMember.name">
+
+    <input
+      type="text"
+      placeholder="Role"
+      [(ngModel)]="newMember.role">
+
+    <button (click)="addMember()">
+      Add Member
+    </button>
+
+  </div>
+
+  <div class="search-card">
+
+    <input
+      type="text"
+      placeholder="Search Member"
+      [(ngModel)]="searchText">
+
+  </div>
+
+  <div class="stats">
+
+    <div class="stat-card">
+      <h3>Total Members</h3>
+      <p>{{ members.length }}</p>
+    </div>
+
+  </div>
+
+  <div class="members-grid">
+
+    @for(member of members; track member.id){
+
+      @if(
+        searchText === '' ||
+        member.name.toLowerCase().includes(searchText.toLowerCase())
+      ){
+
+      <div class="member-card">
+
+        <h3>{{ member.name }}</h3>
+
+        <p>{{ member.role }}</p>
+
+        <button
+          class="delete-btn"
+          (click)="deleteMember(member.id)">
+          Delete
+        </button>
+
+      </div>
+
+      }
+
+    }
+
+  </div>
+
+</div>
