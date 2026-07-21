@@ -104,3 +104,17 @@
   }
 
 }
+
+.error{
+  display:block;
+  color:#dc2626;
+  font-size:12px;
+  margin-top:4px;
+  margin-bottom:8px;
+  font-weight:500;
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}

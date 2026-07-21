@@ -9,52 +9,100 @@
 
     <h2>➕ Add New Task</h2>
 
-    <input
-      type="text"
-      placeholder="Task Title"
-      [(ngModel)]="newTask.title">
+    <form [formGroup]="taskForm">
 
-    <input
-      type="text"
-      placeholder="Description"
-      [(ngModel)]="newTask.description">
+      <input
+        type="text"
+        placeholder="Task Title"
+        formControlName="title">
 
-    <select [(ngModel)]="newTask.priority">
-      <option value="High">High</option>
-      <option value="Medium">Medium</option>
-      <option value="Low">Low</option>
-    </select>
+      @if(taskForm.get('title')?.invalid &&
+          taskForm.get('title')?.touched){
+        <small class="error">
+          Task Title is required
+        </small>
+      }
 
-    <input
-      type="text"
-      placeholder="Department"
-      [(ngModel)]="newTask.department">
+      <input
+        type="text"
+        placeholder="Description"
+        formControlName="description">
 
-    <input
-      type="text"
-      placeholder="Owner"
-      [(ngModel)]="newTask.owner">
+      @if(taskForm.get('description')?.invalid &&
+          taskForm.get('description')?.touched){
+        <small class="error">
+          Description is required
+        </small>
+      }
 
-    <select [(ngModel)]="newTask.status">
-      <option value="In Progress">In Progress</option>
-      <option value="Completed">Completed</option>
-      <option value="Pending">Pending</option>
-    </select>
+      <select formControlName="priority">
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
 
-    <input
-      type="text"
-      placeholder="Goal"
-      [(ngModel)]="newTask.goal">
+      <input
+        type="text"
+        placeholder="Department"
+        formControlName="department">
 
-    <input
-      type="date"
-      [(ngModel)]="newTask.dueDate">
+      @if(taskForm.get('department')?.invalid &&
+          taskForm.get('department')?.touched){
+        <small class="error">
+          Department is required
+        </small>
+      }
 
-    <button
-      class="add-btn"
-      (click)="addTask()">
-      Add Task
-    </button>
+      <input
+        type="text"
+        placeholder="Owner"
+        formControlName="owner">
+
+      @if(taskForm.get('owner')?.invalid &&
+          taskForm.get('owner')?.touched){
+        <small class="error">
+          Owner is required
+        </small>
+      }
+
+      <select formControlName="status">
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+        <option value="Pending">Pending</option>
+      </select>
+
+      <input
+        type="text"
+        placeholder="Goal"
+        formControlName="goal">
+
+      @if(taskForm.get('goal')?.invalid &&
+          taskForm.get('goal')?.touched){
+        <small class="error">
+          Goal is required
+        </small>
+      }
+
+      <input
+        type="date"
+        formControlName="dueDate">
+
+      @if(taskForm.get('dueDate')?.invalid &&
+          taskForm.get('dueDate')?.touched){
+        <small class="error">
+          Due Date is required
+        </small>
+      }
+
+      <button
+        type="button"
+        class="add-btn"
+        [disabled]="taskForm.invalid"
+        (click)="addTask()">
+        Add Task
+      </button>
+
+    </form>
 
   </div>
 
@@ -83,96 +131,96 @@
 
     @for(task of tasks; track task.id){
 
-    <div class="work-card">
+      <div class="work-card">
 
-      <div class="card-top">
+        <div class="card-top">
 
-        <h3>{{ task.title }}</h3>
+          <h3>{{ task.title }}</h3>
 
-        <span class="priority">
-          {{ task.priority }}
-        </span>
-
-      </div>
-
-      <p>{{ task.description }}</p>
-
-      <div class="task-meta">
-
-        <p>
-          <strong>Owner:</strong>
-          {{ task.owner }}
-        </p>
-
-        <p>
-          <strong>Status:</strong>
-          {{ task.status }}
-        </p>
-
-        <p>
-          <strong>Goal:</strong>
-          {{ task.goal }}
-        </p>
-
-      </div>
-
-      <div class="info-row">
-
-        <span>
-          🏢 {{ task.department }}
-        </span>
-
-        <span>
-          📅 {{ task.dueDate }}
-        </span>
-
-      </div>
-
-      <div class="progress-section">
-
-        <div class="progress-header">
-
-          <span>Progress</span>
-
-          @if(task.status === 'Completed'){
-            <span>100%</span>
-          }
-
-          @if(task.status === 'In Progress'){
-            <span>60%</span>
-          }
-
-          @if(task.status === 'Pending'){
-            <span>20%</span>
-          }
+          <span class="priority">
+            {{ task.priority }}
+          </span>
 
         </div>
 
-        <div class="progress-bar">
+        <p>{{ task.description }}</p>
 
-          @if(task.status === 'Completed'){
-            <div class="progress-fill progress-100"></div>
-          }
+        <div class="task-meta">
 
-          @if(task.status === 'In Progress'){
-            <div class="progress-fill progress-60"></div>
-          }
+          <p>
+            <strong>Owner:</strong>
+            {{ task.owner }}
+          </p>
 
-          @if(task.status === 'Pending'){
-            <div class="progress-fill progress-20"></div>
-          }
+          <p>
+            <strong>Status:</strong>
+            {{ task.status }}
+          </p>
+
+          <p>
+            <strong>Goal:</strong>
+            {{ task.goal }}
+          </p>
 
         </div>
 
+        <div class="info-row">
+
+          <span>
+            🏢 {{ task.department }}
+          </span>
+
+          <span>
+            📅 {{ task.dueDate }}
+          </span>
+
+        </div>
+
+        <div class="progress-section">
+
+          <div class="progress-header">
+
+            <span>Progress</span>
+
+            @if(task.status === 'Completed'){
+              <span>100%</span>
+            }
+
+            @if(task.status === 'In Progress'){
+              <span>60%</span>
+            }
+
+            @if(task.status === 'Pending'){
+              <span>20%</span>
+            }
+
+          </div>
+
+          <div class="progress-bar">
+
+            @if(task.status === 'Completed'){
+              <div class="progress-fill progress-100"></div>
+            }
+
+            @if(task.status === 'In Progress'){
+              <div class="progress-fill progress-60"></div>
+            }
+
+            @if(task.status === 'Pending'){
+              <div class="progress-fill progress-20"></div>
+            }
+
+          </div>
+
+        </div>
+
+        <button
+          class="delete-btn"
+          (click)="deleteTask(task.id)">
+          🗑 Delete Task
+        </button>
+
       </div>
-
-      <button
-        class="delete-btn"
-        (click)="deleteTask(task.id)">
-        🗑 Delete Task
-      </button>
-
-    </div>
 
     }
 

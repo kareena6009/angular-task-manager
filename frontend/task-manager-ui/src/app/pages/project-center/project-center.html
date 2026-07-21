@@ -11,14 +11,30 @@
 
     <h2>Add Milestone</h2>
 
-    <input
-      type="text"
-      placeholder="Milestone Name"
-      [(ngModel)]="newMilestone.title">
+    <form [formGroup]="milestoneForm">
 
-    <button (click)="addMilestone()">
-      Add Milestone
-    </button>
+      <input
+        type="text"
+        placeholder="Milestone Name"
+        formControlName="title">
+
+      @if(
+        milestoneForm.get('title')?.invalid &&
+        milestoneForm.get('title')?.touched
+      ){
+        <small class="error">
+          Milestone Name is required
+        </small>
+      }
+
+      <button
+        type="button"
+        [disabled]="milestoneForm.invalid"
+        (click)="addMilestone()">
+        Add Milestone
+      </button>
+
+    </form>
 
   </div>
 
@@ -34,17 +50,17 @@
 
     @for(milestone of milestones; track milestone.id){
 
-    <div class="milestone-card">
+      <div class="milestone-card">
 
-      <h3>{{ milestone.title }}</h3>
+        <h3>{{ milestone.title }}</h3>
 
-      <button
-        class="delete-btn"
-        (click)="deleteMilestone(milestone.id)">
-        Delete
-      </button>
+        <button
+          class="delete-btn"
+          (click)="deleteMilestone(milestone.id)">
+          Delete
+        </button>
 
-    </div>
+      </div>
 
     }
 

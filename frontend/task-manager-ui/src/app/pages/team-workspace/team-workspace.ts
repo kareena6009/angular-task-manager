@@ -6,7 +6,13 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 
 import { ProjectService } from '../../services/project';
 
@@ -15,7 +21,8 @@ import { ProjectService } from '../../services/project';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './team-workspace.html',
   styleUrl: './team-workspace.css'
@@ -24,15 +31,16 @@ export class TeamWorkspace implements OnInit {
 
   private projectService = inject(ProjectService);
   private cdr = inject(ChangeDetectorRef);
+  private fb = inject(FormBuilder);
 
   members: any[] = [];
 
   searchText = '';
 
-  newMember = {
-    name: '',
-    role: ''
-  };
+  memberForm = this.fb.group({
+    name: ['', Validators.required],
+    role: ['', Validators.required]
+  });
 
   ngOnInit(): void {
     this.loadMembers();
@@ -40,41 +48,42 @@ export class TeamWorkspace implements OnInit {
 
   loadMembers(): void {
 
-    this.projectService.getMembers()
+    this.projectService
+      .getMembers()
       .subscribe({
-        next: (data: any) => {
 
-          console.log('DATA RECEIVED', data);
+        next: (data: any) => {
 
           this.members = [...data];
 
           this.cdr.detectChanges();
+
         },
 
         error: (err) => {
+
           console.error(err);
+
         }
+
       });
 
   }
 
   addMember(): void {
 
-    if (
-      !this.newMember.name.trim() ||
-      !this.newMember.role.trim()
-    ) {
+    if (this.memberForm.invalid) {
+
+      this.memberForm.markAllAsTouched();
       return;
+
     }
 
     this.projectService
-      .addMember(this.newMember)
+      .addMember(this.memberForm.value)
       .subscribe(() => {
 
-        this.newMember = {
-          name: '',
-          role: ''
-        };
+        this.memberForm.reset();
 
         this.loadMembers();
 

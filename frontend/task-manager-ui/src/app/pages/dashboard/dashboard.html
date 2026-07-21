@@ -8,7 +8,7 @@
     </div>
 
     <div class="date">
-      {{ today }}
+     {{ today | date:'fullDate' }}
     </div>
 
   </div>
@@ -17,22 +17,22 @@
 
     <div class="card blue">
       <h3>Total Tasks</h3>
-      <h1>{{ totalTasks }}</h1>
+      <h1>{{ totalTasks() }}</h1>
     </div>
 
     <div class="card orange">
       <h3>Pending Tasks</h3>
-      <h1>{{ pendingTasks }}</h1>
+      <h1>{{ pendingTasks() }}</h1>
     </div>
 
     <div class="card green">
       <h3>Completed Tasks</h3>
-      <h1>{{ completedTasks }}</h1>
+      <h1>{{ completedTasks() }}</h1>
     </div>
 
     <div class="card red">
       <h3>High Priority</h3>
-      <h1>{{ highPriorityTasks }}</h1>
+      <h1>{{ highPriorityTasks() }}</h1>
     </div>
 
     <div class="card purple">
@@ -73,11 +73,11 @@
 
       <div class="health-score">
 
-        {{ productivityScore }}%
+        {{ productivityScore() }}%
 
       </div>
 
-      @if(productivityScore >= 80){
+      @if(productivityScore() >= 80){
 
         <p class="good">
           Excellent Progress
@@ -85,7 +85,7 @@
 
       }
 
-      @if(productivityScore >= 50 && productivityScore < 80){
+      @if(productivityScore() >= 50 && productivityScore() < 80){
 
         <p class="medium">
           Good Progress
@@ -93,7 +93,7 @@
 
       }
 
-      @if(productivityScore < 50){
+      @if(productivityScore() < 50){
 
         <p class="low">
           Needs Attention

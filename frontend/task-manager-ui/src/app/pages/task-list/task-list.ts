@@ -4,12 +4,19 @@ import {
   inject,
   ChangeDetectorRef
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
+
 import { TaskService } from '../../services/task';
 
 @Component({
   selector: 'app-task-list',
-  imports: [FormsModule],
+  standalone: true,
+  imports: [ReactiveFormsModule],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css'
 })
@@ -21,19 +28,20 @@ export class TaskList implements OnInit {
   dueThisWeekCount = 0;
   sprintProgress = 0;
 
-  newTask = {
-    title: '',
-    description: '',
-    priority: 'Medium',
-    department: '',
-    owner: '',
-    status: 'In Progress',
-    goal: '',
-    dueDate: ''
-  };
-
   private taskService = inject(TaskService);
   private cdr = inject(ChangeDetectorRef);
+  private fb = inject(FormBuilder);
+
+  taskForm = this.fb.group({
+    title: ['', Validators.required],
+    description: ['', Validators.required],
+    priority: ['Medium', Validators.required],
+    department: ['', Validators.required],
+    owner: ['', Validators.required],
+    status: ['In Progress', Validators.required],
+    goal: ['', Validators.required],
+    dueDate: ['', Validators.required]
+  });
 
   ngOnInit(): void {
     this.loadTasks();
@@ -68,42 +76,36 @@ export class TaskList implements OnInit {
 
   addTask(): void {
 
-    if (
-      !this.newTask.title.trim() ||
-      !this.newTask.description.trim() ||
-      !this.newTask.department.trim() ||
-      !this.newTask.owner.trim() ||
-      !this.newTask.goal.trim() ||
-      !this.newTask.dueDate
-    ) {
-      alert('Please fill all fields');
+    if (this.taskForm.invalid) {
+
+      this.taskForm.markAllAsTouched();
       return;
+
     }
 
-    this.taskService.addTask(this.newTask).subscribe(() => {
+    this.taskService
+      .addTask(this.taskForm.value)
+      .subscribe(() => {
 
-      this.newTask = {
-        title: '',
-        description: '',
-        priority: 'Medium',
-        department: '',
-        owner: '',
-        status: 'In Progress',
-        goal: '',
-        dueDate: ''
-      };
+        this.taskForm.reset({
+          priority: 'Medium',
+          status: 'In Progress'
+        });
 
-      this.loadTasks();
+        this.loadTasks();
 
-    });
+      });
 
   }
 
   deleteTask(id: number): void {
 
-    this.taskService.deleteTask(id).subscribe(() => {
-      this.loadTasks();
-    });
+    this.taskService.deleteTask(id)
+      .subscribe(() => {
+
+        this.loadTasks();
+
+      });
 
   }
 

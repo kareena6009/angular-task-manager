@@ -2,8 +2,12 @@ import {
   Component,
   OnInit,
   inject,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  signal,
+  computed
 } from '@angular/core';
+
+import { CommonModule } from '@angular/common';
 
 import { TaskService } from '../../services/task';
 import { ProjectService } from '../../services/project';
@@ -11,7 +15,7 @@ import { ProjectService } from '../../services/project';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -21,22 +25,30 @@ export class Dashboard implements OnInit {
   private projectService = inject(ProjectService);
   private cdr = inject(ChangeDetectorRef);
 
-  today = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  today = new Date();
 
-  totalTasks = 0;
-  pendingTasks = 0;
-  completedTasks = 0;
-  highPriorityTasks = 0;
+  totalTasks = signal(0);
+
+  pendingTasks = signal(0);
+
+  completedTasks = signal(0);
+
+  highPriorityTasks = signal(0);
 
   totalMembers = 0;
+
   totalMilestones = 0;
 
-  productivityScore = 0;
+  productivityScore = computed(() => {
+
+    const total = this.totalTasks();
+    const completed = this.completedTasks();
+
+    return total > 0
+      ? Math.round((completed / total) * 100)
+      : 0;
+
+  });
 
   recentTasks: any[] = [];
 
@@ -52,29 +64,25 @@ export class Dashboard implements OnInit {
       .getTasks()
       .subscribe((tasks: any) => {
 
-        this.totalTasks = tasks.length;
+        this.totalTasks.set(tasks.length);
 
-        this.completedTasks =
+        this.completedTasks.set(
           tasks.filter(
             (t: any) => t.status === 'Completed'
-          ).length;
+          ).length
+        );
 
-        this.pendingTasks =
+        this.pendingTasks.set(
           tasks.filter(
             (t: any) => t.status === 'Pending'
-          ).length;
+          ).length
+        );
 
-        this.highPriorityTasks =
+        this.highPriorityTasks.set(
           tasks.filter(
             (t: any) => t.priority === 'High'
-          ).length;
-
-        this.productivityScore =
-          this.totalTasks > 0
-            ? Math.round(
-                (this.completedTasks / this.totalTasks) * 100
-              )
-            : 0;
+          ).length
+        );
 
         this.recentTasks = [...tasks]
           .reverse()

@@ -30,19 +30,44 @@
       Sign in to access your workspace
     </p>
 
-    <input
-      type="text"
-      placeholder="Username"
-      [(ngModel)]="username">
+    <form [formGroup]="loginForm">
 
-    <input
-      type="password"
-      placeholder="Password"
-      [(ngModel)]="password">
+      <input
+        type="text"
+        formControlName="username"
+        placeholder="Username">
 
-    <button (click)="login()">
-      Sign In
-    </button>
+      @if(
+        loginForm.get('username')?.invalid &&
+        loginForm.get('username')?.touched
+      ){
+        <small class="error">
+          Username is required (minimum 3 characters)
+        </small>
+      }
+
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="Password">
+
+      @if(
+        loginForm.get('password')?.invalid &&
+        loginForm.get('password')?.touched
+      ){
+        <small class="error">
+          Password is required (minimum 3 characters)
+        </small>
+      }
+
+      <button
+        type="button"
+        [disabled]="loginForm.invalid"
+        (click)="login()">
+        Login
+      </button>
+
+    </form>
 
   </div>
 

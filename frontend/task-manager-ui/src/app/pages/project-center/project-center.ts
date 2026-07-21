@@ -4,14 +4,24 @@ import {
   inject,
   ChangeDetectorRef
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+
 import { CommonModule } from '@angular/common';
+
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
+
 import { ProjectService } from '../../services/project';
 
 @Component({
   selector: 'app-project-center',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './project-center.html',
   styleUrl: './project-center.css'
 })
@@ -19,22 +29,25 @@ export class ProjectCenter implements OnInit {
 
   private projectService = inject(ProjectService);
   private cdr = inject(ChangeDetectorRef);
+  private fb = inject(FormBuilder);
 
   milestones: any[] = [];
 
-  newMilestone = {
-    title: ''
-  };
+  milestoneForm = this.fb.group({
+    title: ['', Validators.required]
+  });
 
- ngOnInit(): void {
+  ngOnInit(): void {
 
-  setTimeout(() => {
-    this.loadMilestones();
-  }, 100);
+    setTimeout(() => {
 
-}
+      this.loadMilestones();
 
-  loadMilestones() {
+    }, 100);
+
+  }
+
+  loadMilestones(): void {
 
     this.projectService
       .getMilestones()
@@ -48,15 +61,20 @@ export class ProjectCenter implements OnInit {
 
   }
 
-  addMilestone() {
+  addMilestone(): void {
+
+    if (this.milestoneForm.invalid) {
+
+      this.milestoneForm.markAllAsTouched();
+      return;
+
+    }
 
     this.projectService
-      .addMilestone(this.newMilestone)
+      .addMilestone(this.milestoneForm.value)
       .subscribe(() => {
 
-        this.newMilestone = {
-          title: ''
-        };
+        this.milestoneForm.reset();
 
         this.loadMilestones();
 
@@ -64,7 +82,7 @@ export class ProjectCenter implements OnInit {
 
   }
 
-  deleteMilestone(id: number) {
+  deleteMilestone(id: number): void {
 
     this.projectService
       .deleteMilestone(id)
