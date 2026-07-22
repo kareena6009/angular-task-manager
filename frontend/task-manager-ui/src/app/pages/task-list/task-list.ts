@@ -12,11 +12,11 @@ import {
 } from '@angular/forms';
 
 import { TaskService } from '../../services/task';
-
+import { TaskStatusPipe } from '../../shared/pipes/task-status';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,TaskStatusPipe],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css'
 })
