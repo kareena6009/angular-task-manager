@@ -131,7 +131,10 @@
 
     @for(task of tasks; track task.id){
 
-      <div class="work-card">
+      <div
+        class="work-card"
+        appHighPriority
+        [priority]="task.priority">
 
         <div class="card-top">
 

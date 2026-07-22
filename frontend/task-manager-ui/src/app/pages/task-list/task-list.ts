@@ -13,10 +13,12 @@ import {
 
 import { TaskService } from '../../services/task';
 import { TaskStatusPipe } from '../../shared/pipes/task-status';
+import { HighPriorityDirective }
+from '../../shared/directives/high-priority.directive';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [ReactiveFormsModule,TaskStatusPipe],
+  imports: [ReactiveFormsModule,TaskStatusPipe,HighPriorityDirective],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css'
 })
