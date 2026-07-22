@@ -19,27 +19,36 @@
       📋 Tasks
     </li>
 
-    <li
-      routerLink="/team-workspace"
-      routerLinkActive="active-link">
-      👥 Team Workspace
-    </li>
+    @if(role === 'admin' || role === 'manager'){
 
-    <li
-      routerLink="/analytics"
-      routerLinkActive="active-link">
-      📈 Analytics
-    </li>
+      <li
+        routerLink="/project-center"
+        routerLinkActive="active-link">
+        🎯 Project Center
+      </li>
 
-    <li
-      routerLink="/project-center"
-      routerLinkActive="active-link">
-      🎯 Project Center
-    </li>
+    }
+
+    @if(role === 'admin'){
+
+      <li
+        routerLink="/team-workspace"
+        routerLinkActive="active-link">
+        👥 Team Workspace
+      </li>
+
+      <li
+        routerLink="/analytics"
+        routerLinkActive="active-link">
+        📈 Analytics
+      </li>
+
+    }
 
     <li
       routerLink="/login"
-      routerLinkActive="active-link">
+      routerLinkActive="active-link"
+      (click)="logout()">
       🚪 Logout
     </li>
 

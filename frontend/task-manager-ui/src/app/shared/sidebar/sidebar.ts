@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -10,6 +10,20 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css'
 })
-export class Sidebar {
+export class Sidebar implements OnInit {
+
+  role = '';
+
+  ngOnInit(): void {
+
+    this.role = localStorage.getItem('role') || '';
+
+  }
+
+  logout(): void {
+
+    localStorage.removeItem('role');
+
+  }
 
 }

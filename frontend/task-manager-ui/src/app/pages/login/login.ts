@@ -35,6 +35,10 @@ export class Login {
         Validators.required,
         Validators.minLength(3)
       ]
+    ],
+    role: [
+      '',
+      Validators.required
     ]
   });
 
@@ -49,12 +53,15 @@ export class Login {
 
     const username = this.loginForm.value.username ?? '';
     const password = this.loginForm.value.password ?? '';
+    const role = this.loginForm.value.role ?? '';
 
     this.auth
       .login(username, password)
       .subscribe((response: any) => {
 
         if (response.success) {
+
+          localStorage.setItem('role', role);
 
           alert('Login Successful');
 
