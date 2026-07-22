@@ -60,6 +60,35 @@
         </small>
       }
 
+      <select formControlName="role">
+
+        <option value="">
+          Select Role
+        </option>
+
+        <option value="admin">
+          Admin
+        </option>
+
+        <option value="manager">
+          Manager
+        </option>
+
+        <option value="employee">
+          Employee
+        </option>
+
+      </select>
+
+      @if(
+        loginForm.get('role')?.invalid &&
+        loginForm.get('role')?.touched
+      ){
+        <small class="error">
+          Please select a role
+        </small>
+      }
+
       <button
         type="button"
         [disabled]="loginForm.invalid"
