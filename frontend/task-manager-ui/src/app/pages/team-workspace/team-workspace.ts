@@ -15,13 +15,15 @@ import {
 } from '@angular/forms';
 
 import { ProjectService } from '../../services/project';
-
+import { HoverCardDirective }
+from '../../shared/directives/hover-card.directive';
 @Component({
   selector: 'app-team-workspace',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
+    HoverCardDirective,
     ReactiveFormsModule
   ],
   templateUrl: './team-workspace.html',
