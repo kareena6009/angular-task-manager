@@ -10,15 +10,20 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
-
+import { CapitalizePipe } from '../../shared/pipes/captalize.pipe';
 import { TaskService } from '../../services/task';
 import { TaskStatusPipe } from '../../shared/pipes/task-status';
-import { HighPriorityDirective }
-from '../../shared/directives/high-priority.directive';
+import { HighPriorityDirective } from '../../shared/directives/high-priority.directive';
+
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [ReactiveFormsModule,TaskStatusPipe,HighPriorityDirective],
+  imports: [
+    ReactiveFormsModule,
+    TaskStatusPipe,
+    HighPriorityDirective,
+    CapitalizePipe
+  ],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css'
 })
@@ -31,17 +36,15 @@ export class TaskList implements OnInit {
   sprintProgress = 0;
 
   private taskService = inject(TaskService);
-  private cdr = inject(ChangeDetectorRef);
   private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
 
   taskForm = this.fb.group({
     title: ['', Validators.required],
-    description: ['', Validators.required],
     priority: ['Medium', Validators.required],
     department: ['', Validators.required],
     owner: ['', Validators.required],
     status: ['In Progress', Validators.required],
-    goal: ['', Validators.required],
     dueDate: ['', Validators.required]
   });
 
@@ -51,26 +54,57 @@ export class TaskList implements OnInit {
 
   loadTasks(): void {
 
-    this.taskService.getTasks().subscribe((data: any) => {
+    this.taskService.getTasks().subscribe({
 
-      this.tasks = data;
+      next: (data: any) => {
 
-      this.highPriorityCount = data.filter(
-        (task: any) => task.priority === 'High'
-      ).length;
+        console.log('Tasks Loaded:', data);
 
-      this.dueThisWeekCount = data.length;
+        this.tasks = data.map((task: any) => ({
 
-      const completedTasks = data.filter(
-        (task: any) => task.status === 'Completed'
-      ).length;
+          ...task,
 
-      this.sprintProgress =
-        data.length > 0
-          ? Math.round((completedTasks / data.length) * 100)
-          : 0;
+          progress:
+            task.status === 'Completed'
+              ? 100
+              : task.status === 'In Progress'
+              ? 60
+              : 20
 
-      this.cdr.detectChanges();
+        }));
+
+        console.log('Mapped Tasks:', this.tasks);
+
+        this.highPriorityCount =
+          this.tasks.filter(
+            (task: any) => task.priority === 'High'
+          ).length;
+
+        this.dueThisWeekCount =
+          this.tasks.length;
+
+        const completedTasks =
+          this.tasks.filter(
+            (task: any) =>
+              task.status === 'Completed'
+          ).length;
+
+        this.sprintProgress =
+          this.tasks.length > 0
+            ? Math.round(
+                (completedTasks / this.tasks.length) * 100
+              )
+            : 0;
+
+        this.cdr.detectChanges();
+
+      },
+
+      error: (err) => {
+
+        console.error('GET TASKS ERROR:', err);
+
+      }
 
     });
 
@@ -87,14 +121,26 @@ export class TaskList implements OnInit {
 
     this.taskService
       .addTask(this.taskForm.value)
-      .subscribe(() => {
+      .subscribe({
 
-        this.taskForm.reset({
-          priority: 'Medium',
-          status: 'In Progress'
-        });
+        next: () => {
 
-        this.loadTasks();
+          this.taskForm.reset({
+            priority: 'Medium',
+            status: 'In Progress'
+          });
+
+          this.loadTasks();
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (err) => {
+
+          console.error('ADD TASK ERROR:', err);
+
+        }
 
       });
 
@@ -102,10 +148,23 @@ export class TaskList implements OnInit {
 
   deleteTask(id: number): void {
 
-    this.taskService.deleteTask(id)
-      .subscribe(() => {
+    this.taskService
+      .deleteTask(id)
+      .subscribe({
 
-        this.loadTasks();
+        next: () => {
+
+          this.loadTasks();
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (err) => {
+
+          console.error('DELETE TASK ERROR:', err);
+
+        }
 
       });
 

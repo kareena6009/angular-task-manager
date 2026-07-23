@@ -27,17 +27,31 @@ export class Dashboard implements OnInit {
 
   today = new Date();
 
-  totalTasks = signal(0);
+  /* Single Source of Truth */
 
-  pendingTasks = signal(0);
+  tasks = signal<any[]>([]);
 
-  completedTasks = signal(0);
+  totalTasks = computed(() =>
+    this.tasks().length
+  );
 
-  highPriorityTasks = signal(0);
+  completedTasks = computed(() =>
+    this.tasks().filter(
+      task => task.status === 'Completed'
+    ).length
+  );
 
-  totalMembers = 0;
+  pendingTasks = computed(() =>
+    this.tasks().filter(
+      task => task.status === 'Pending'
+    ).length
+  );
 
-  totalMilestones = 0;
+  highPriorityTasks = computed(() =>
+    this.tasks().filter(
+      task => task.priority === 'High'
+    ).length
+  );
 
   productivityScore = computed(() => {
 
@@ -49,6 +63,9 @@ export class Dashboard implements OnInit {
       : 0;
 
   });
+
+  totalMembers = 0;
+  totalMilestones = 0;
 
   recentTasks: any[] = [];
 
@@ -64,25 +81,7 @@ export class Dashboard implements OnInit {
       .getTasks()
       .subscribe((tasks: any) => {
 
-        this.totalTasks.set(tasks.length);
-
-        this.completedTasks.set(
-          tasks.filter(
-            (t: any) => t.status === 'Completed'
-          ).length
-        );
-
-        this.pendingTasks.set(
-          tasks.filter(
-            (t: any) => t.status === 'Pending'
-          ).length
-        );
-
-        this.highPriorityTasks.set(
-          tasks.filter(
-            (t: any) => t.priority === 'High'
-          ).length
-        );
+        this.tasks.set(tasks);
 
         this.recentTasks = [...tasks]
           .reverse()
